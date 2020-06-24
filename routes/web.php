@@ -22,6 +22,13 @@ Route::get('/', function () {
 Route::get('/recetas', 'RecetaController@index')->name('recetas.index');
 Route::get('/recetas/create', 'RecetaController@create')->name('recetas.create');
 Route::post('/recetas','RecetaController@store')->name('receta.store');
+Route::get('/recetas/{receta}', 'RecetaController@show')->name('receta.show');
+Route::get('/recetas/{receta}/edit', 'RecetaController@edit')->name('receta.edit');
+Route::put('/recetas/{receta}', 'RecetaController@update')->name('receta.update');
+
+
+//Route test
+Route::get('/test','RecetaController@test')->name('receta.test');
 
 
 

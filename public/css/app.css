@@ -10929,12 +10929,16 @@ a.text-dark:focus {
 }
 
 body {
-  font-family: "Nunito", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .navbar-brand {
   font-family: "Sriracha", cursive;
   font-size: 2rem;
   color: white;
+}
+
+.form-group trix-editor {
+  height: auto;
 }
 

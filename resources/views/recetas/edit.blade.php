@@ -7,12 +7,12 @@
     <a href="{{route('recetas.index')}}" class="btn btn-primary mr-2 text-white">Volver</a>
 @endsection
 @section('content')
-
-    <h2 class="text-center ">Crear Receta</h2>
+    <h2 class="text-center ">Editar Receta: {{$receta->titulo}}</h2>
     <div class="row justify-content-center mt-8">
         <div class="col-md-8">
-            <form action="{{route('receta.store')}}" method="post" enctype="multipart/form-data" novalidate>
+            <form action="{{route('receta.update', ['receta' => $receta->id])}}" method="post" enctype="multipart/form-data" novalidate>
                 @csrf
+                @method('put')
                 <div class="form-group">
                     <label for="titulo">Titulo Receta</label>
                     <input 
@@ -21,7 +21,7 @@
                         id="titulo" 
                         class="form-control @error('titulo') is-invalid @enderror " 
                         placeholder="Titul receta"
-                        value={{old('titulo')}}
+                        value={{$receta->titulo}}
                     >
 
                     @error('titulo')
@@ -40,7 +40,7 @@
                         <option value="">--Selecciona Categoria--</option>
                         @foreach($categorias as $value)
                             
-                            <option value="{{$value->id}}" {{ old('categoria') == $value->id ? 'selected' : '' }}>{{$value->categoria}}</option>
+                            <option value="{{$value->id}}" {{ $receta->categoria_id == $value->id ? 'selected' : '' }}>{{$value->categoria}}</option>
                         @endforeach
                     </select>
                     @error('categoria')
@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group bg-white p-2 rounded   ">
                     <label for="preparacion">Preparación</label>
-                    <input type="hidden" name="preparacion"  id="preparacion" value={{old('preparacion')}}>
+                    <input type="hidden" name="preparacion"  id="preparacion" value={{$receta->preparacion}}>
                     <trix-editor class="form-control @error('preparacion') is-invalid @enderror " input='preparacion'></trix-editor>
                     @error('preparacion')
                     <div class="invalid-feedback d-block " role="alert">
@@ -63,7 +63,7 @@
                 </div>
                 <div class="form-group bg-white p-2 rounded">
                     <label for="ingredientes">Ingredientes</label>
-                    <input type="hidden" name="ingredientes"  id="ingredientes" value={{old('ingredientes')}}>
+                    <input type="hidden" name="ingredientes"  id="ingredientes" value={{$receta->ingredientes}}>
                     <trix-editor class="form-control @error('ingredientes') is-invalid @enderror " input='ingredientes'></trix-editor>
                     @error('ingredientes')
                     <div class="invalid-feedback d-block " role="alert">
@@ -72,8 +72,13 @@
                         
                     @enderror
                 </div>
+                <div class="imagen-new">
+                    <p>Imagen Actual:</p>
+                    <img src="/storage/{{$receta->imagen}}" style="width: 300px; margin-bottom: 10px" alt="">
+                </div>
                 <div class="form-group">
-                    <label for="imagen">Imagen</label>
+    
+                    <label for="imagen">Cambiar Imagen:</label>
                     <input 
                         type="file" 
                         name="imagen" 

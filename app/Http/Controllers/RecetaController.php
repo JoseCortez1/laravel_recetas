@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\CategoriasRecetas;
 use App\Receta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
 
 class RecetaController extends Controller
 {
@@ -16,7 +19,11 @@ class RecetaController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except'=>'show']);
+    }
+
+    public function test(){
+        return view('recetas.test');
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +33,8 @@ class RecetaController extends Controller
     public function index()
     {
         //
-        return view('recetas.index');
+        $recetas = Auth::user()->recetas;
+        return view('recetas.index')->with(compact('recetas'));
     }
 
     /**
@@ -36,8 +44,16 @@ class RecetaController extends Controller
      */
     public function create()
     {
-        //
-        return view('recetas.create');
+        /**
+         * Obtencion de categorias sin modelo
+         * $categorias = DB::table('categorias_recetas')->get()->pluck('categoria', 'id');
+         */
+        /**
+         * Obtencion de datos con modelo
+         */
+        $categorias = CategoriasRecetas::all(['id', 'categoria']);
+
+        return view('recetas.create')->with(compact('categorias'));
     }
 
     /**
@@ -60,11 +76,48 @@ class RecetaController extends Controller
          */
 
         $data = request()->validate([
-            'titulo'=>'required|min:2'
+            'titulo'=>'required|min:2',
+            'categoria'=>'required',
+            'preparacion'=>'required',
+            'ingredientes'=>'required',
+            'imagen'=>'required|image'
         ]);
-        DB::table('recetas')->insert([
-            'titulo'=> $data['titulo']
+       
+
+        //Ruta de la imagen a almacenar
+        $url_img = $request['imagen']->store('upload-recetas', 'public');
+
+
+        /**
+         * resize de imagen con 
+         * composer require intervention/image
+         */
+        $img = Image::make(public_path("storage/{$url_img}"))->fit(1000,550);
+        $img->save();
+        
+        
+
+      /*   DB::table('recetas')->insert([
+            'titulo'=> $data['titulo'],
+            'categoria_id'=>$data['categoria'] ,
+            'preparacion'=>$data['preparacion'],
+            'ingredientes'=>$data['ingredientes'],
+            'user_id'=>Auth::user()->id,
+            'imagen'=>$url_img
+
         ]);
+        */
+        /**
+         * Almacenar en BD con modelos
+         */
+        auth()->user()->recetas()->create([
+            'titulo'=> $data['titulo'],
+            'categoria_id'=>$data['categoria'] ,
+            'preparacion'=>$data['preparacion'],
+            'ingredientes'=>$data['ingredientes'],
+            'imagen'=>$url_img
+        ]);
+
 
         return redirect()->action('RecetaController@index');
     }
@@ -78,6 +131,7 @@ class RecetaController extends Controller
     public function show(Receta $receta)
     {
         //
+        return view('recetas.show',compact('receta'));
     }
 
     /**
@@ -89,6 +143,8 @@ class RecetaController extends Controller
     public function edit(Receta $receta)
     {
         //
+        $categorias = CategoriasRecetas::all(['id', 'categoria']);
+        return view('recetas.edit', compact('categorias', 'receta'));
     }
 
     /**
@@ -101,6 +157,37 @@ class RecetaController extends Controller
     public function update(Request $request, Receta $receta)
     {
         //
+        $data = request()->validate([
+            'titulo'=>'required|min:2',
+            'categoria'=>'required',
+            'preparacion'=>'required',
+            'ingredientes'=>'required'
+        ]);
+        $receta->titulo = $data['titulo'];
+        $receta->categoria_id = $data['categoria'];
+        $receta->preparacion = $data['preparacion'];
+        $receta->ingredientes = $data['ingredientes'];
+        
+
+        if(request('imagen')){
+             //Ruta de la imagen a almacenar
+            $url_img = $request['imagen']->store('upload-recetas', 'public');
+
+
+            /**
+             * resize de imagen con 
+             * composer require intervention/image
+             */
+            $img = Image::make(public_path("storage/{$url_img}"))->fit(1000,550);
+            $img->save();
+
+            $receta->imagen = $url_img;
+        }
+
+        $receta->save();
+
+        return redirect()->action('RecetaController@index');
+        
     }
 
     /**
