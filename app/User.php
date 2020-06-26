@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -39,6 +40,10 @@ class User extends Authenticatable
 
     public function recetas(){
         return $this->hasMany(Receta::class);
+    }
+
+    public function perfil(){
+        return $this.HasOne(Perfil::class);
     }
     
 }

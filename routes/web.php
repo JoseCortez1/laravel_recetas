@@ -25,6 +25,7 @@ Route::post('/recetas','RecetaController@store')->name('receta.store');
 Route::get('/recetas/{receta}', 'RecetaController@show')->name('receta.show');
 Route::get('/recetas/{receta}/edit', 'RecetaController@edit')->name('receta.edit');
 Route::put('/recetas/{receta}', 'RecetaController@update')->name('receta.update');
+Route::delete('/recetas/{receta}/destroy', 'RecetaController@destroy')->name('receta.destroy');
 
 
 //Route test

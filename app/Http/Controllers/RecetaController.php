@@ -142,6 +142,7 @@ class RecetaController extends Controller
      */
     public function edit(Receta $receta)
     {
+        $this->authorize('update', $receta);
         //
         $categorias = CategoriasRecetas::all(['id', 'categoria']);
         return view('recetas.edit', compact('categorias', 'receta'));
@@ -156,6 +157,7 @@ class RecetaController extends Controller
      */
     public function update(Request $request, Receta $receta)
     {
+        $this->authorize('update', $receta);
         //
         $data = request()->validate([
             'titulo'=>'required|min:2',
@@ -199,5 +201,8 @@ class RecetaController extends Controller
     public function destroy(Receta $receta)
     {
         //
+        $this->authorize('delete', $receta);
+        $receta->delete();
+        return redirect()->action('RecetaController@index');
     }
 }

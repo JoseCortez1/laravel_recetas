@@ -21,7 +21,7 @@
                         id="titulo" 
                         class="form-control @error('titulo') is-invalid @enderror " 
                         placeholder="Titul receta"
-                        value={{$receta->titulo}}
+                        value="{{$receta->titulo}}"
                     >
 
                     @error('titulo')
@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group bg-white p-2 rounded   ">
                     <label for="preparacion">Preparación</label>
-                    <input type="hidden" name="preparacion"  id="preparacion" value={{$receta->preparacion}}>
+                    <input type="hidden" name="preparacion"  id="preparacion" value="{{$receta->preparacion}}">
                     <trix-editor class="form-control @error('preparacion') is-invalid @enderror " input='preparacion'></trix-editor>
                     @error('preparacion')
                     <div class="invalid-feedback d-block " role="alert">
