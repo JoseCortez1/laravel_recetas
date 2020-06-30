@@ -79,6 +79,12 @@
                         name="imagen" 
                         id="imagen" 
                         class="form-control  @error('imagen') is-invalid @enderror">
+                    @error('imagen')
+                        <div class="invalid-feedback d-block " role="alert">
+                            <strong>{{$message}}</strong>
+                        </div>
+                        
+                    @enderror
                 </div>
                 <input type="submit" value="Agregar Formulario" class="btn btn-primary">
               

@@ -9,6 +9,6 @@ class Perfil extends Model
 {
     //
     public function usuario(){
-        return $this.BelongsTo(User::class);
+        return $this->BelongsTo(User::class, 'user_id');
     }
 }

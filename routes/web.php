@@ -28,6 +28,12 @@ Route::put('/recetas/{receta}', 'RecetaController@update')->name('receta.update'
 Route::delete('/recetas/{receta}/destroy', 'RecetaController@destroy')->name('receta.destroy');
 
 
+//Rutas de los perfiles de los usuarios siguiendo las buenas practicas de laravel
+
+Route::get('/perfiles/{perfil}', 'PerfilController@show')->name('perfil.show');
+Route::get('/perfiles/{perfil}/edit', 'PerfilController@edit')->name('perfil.edit');
+Route::put('/perfiles/{perfil}', 'PerfilController@update')->name('perfil.update');
+
 //Route test
 Route::get('/test','RecetaController@test')->name('receta.test');
 
